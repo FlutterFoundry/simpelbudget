@@ -5,7 +5,7 @@ class Transaction {
   String title;
   double amount;
   DateTime date;
-  String type; // 'income' or 'expense'
+  String type;
   String? receiptPath;
 
   Transaction({

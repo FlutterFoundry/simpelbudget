@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simpelbudget/models/transaction.dart';
 import 'package:simpelbudget/pages/transaction_list.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TransactionDetailPage extends StatelessWidget {
   final Transaction transaction;
@@ -18,7 +19,7 @@ class TransactionDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Transaction Details')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.transactionDetails)),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -41,7 +42,9 @@ class TransactionDetailPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
-                    transaction.type.toUpperCase(),
+                    transaction.type == 'income'
+                        ? AppLocalizations.of(context)!.income
+                        : AppLocalizations.of(context)!.expense,
                     style: TextStyle(
                       color:
                           transaction.type == 'income'
@@ -61,7 +64,7 @@ class TransactionDetailPage extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'Amount:',
+                  AppLocalizations.of(context)!.amount,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(width: 8),
@@ -83,7 +86,7 @@ class TransactionDetailPage extends StatelessWidget {
             SizedBox(height: 32),
             if (transaction.receiptPath != null) ...[
               Text(
-                'Receipt:',
+              AppLocalizations.of(context)!.receipt,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),

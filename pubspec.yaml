@@ -1,6 +1,6 @@
 name: simpelbudget
-description: "A new Flutter project."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+description: "Simpelbudget is a budget tracking app that helps you keep track of your expenses and incomes."
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -16,9 +16,11 @@ dependencies:
   image_picker: ^1.1.2
   sqflite: ^2.3.0
   path: ^1.8.3
-  intl: ^0.18.1
+  intl: ^0.19.0
   http: ^1.1.0
   flutter_dotenv: ^5.0.2
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +32,4 @@ flutter:
   uses-material-design: true
   assets:
     - .env
+  generate: true

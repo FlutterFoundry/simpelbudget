@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:simpelbudget/pages/dashboard.dart';
 import 'package:simpelbudget/pages/settings.dart';
 import 'package:simpelbudget/pages/transaction_add.dart';
 import 'package:simpelbudget/pages/transaction_list.dart';
-import 'package:simpelbudget/services/database_helpeer.dart';
+import 'package:simpelbudget/services/database_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +21,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Budget Tracker',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -57,13 +66,13 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Budget Tracker'),
+        title: Text(AppLocalizations.of(context)!.appTitle),
         bottom: TabBar(
           controller: _tabController,
-          tabs: [
-            Tab(icon: Icon(Icons.dashboard), text: 'Dashboard'),
-            Tab(icon: Icon(Icons.list), text: 'Transactions'),
-            Tab(icon: Icon(Icons.settings), text: 'Settings'),
+        tabs: [
+            Tab(icon: Icon(Icons.dashboard), text: AppLocalizations.of(context)!.dashboard),
+            Tab(icon: Icon(Icons.list), text: AppLocalizations.of(context)!.transactions),
+            Tab(icon: Icon(Icons.settings), text: AppLocalizations.of(context)!.settings),
           ],
         ),
       ),
@@ -80,7 +89,7 @@ class _HomePageState extends State<HomePage>
             setState(() {});
           });
         },
-        tooltip: 'Add Transaction',
+        tooltip: AppLocalizations.of(context)!.addTransaction,
         child: Icon(Icons.add),
       ),
     );

@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:simpelbudget/models/transaction.dart';
-import 'package:simpelbudget/services/database_helpeer.dart';
+import 'package:simpelbudget/services/database_helper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddTransactionPage extends StatefulWidget {
   const AddTransactionPage({super.key});
@@ -70,7 +71,6 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       _receiptImage = File(pickedImage.path);
     });
 
-    // Process the receipt
     await _processReceiptImage(pickedImage.path);
   }
 
@@ -84,7 +84,6 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       );
       await textRecognizer.close();
 
-      // Preprocess the text
       final processedText = _preprocessText(recognizedText.text);
       setState(() {
         _extractedText = processedText;
@@ -92,7 +91,6 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         _isDetectingTotal = true;
       });
 
-      // Get receipt details from API
       try {
         final receiptDetails = await _getReceiptDetails(processedText);
         if (receiptDetails.containsKey('total')) {
@@ -105,40 +103,46 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
           setState(() {
             _isDetectingTotal = false;
           });
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(
-          //     content: Text('Could not extract total amount from receipt'),
-          //   ),
-          // );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Could not extract total amount from receipt'),
+            ),
+          );
         }
       } catch (e) {
         setState(() {
           _isDetectingTotal = false;
         });
-        // ScaffoldMessenger.of(
-        //   context,
-        // ).showSnackBar(SnackBar(content: Text('Error extracting details: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${AppLocalizations.of(context)!.errorExtractingDetails}: $e',
+            ),
+          ),
+        );
       }
     } catch (e) {
       setState(() {
         _isProcessingReceipt = false;
         _isDetectingTotal = false;
       });
-      // ScaffoldMessenger.of(
-      //   context,
-      // ).showSnackBar(SnackBar(content: Text('Error reading text: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '${AppLocalizations.of(context)!.errorReadingText}: $e',
+          ),
+        ),
+      );
     }
   }
 
   String _preprocessText(String extractedText) {
-    // Replace unwanted characters
     String cleanText =
         extractedText
             .replaceAll(RegExp(r'[_\n]+'), ' ')
             .replaceAll(RegExp(r'\s+'), ' ')
             .trim();
 
-    // Format for better readability
     cleanText = cleanText.replaceAllMapped(
       RegExp(r'(\d+)\s?IDR'),
       (match) => 'IDR ${match.group(1)}',
@@ -214,18 +218,16 @@ $receiptText
         type: _isExpense ? 'expense' : 'income',
         receiptPath: _receiptImage?.path,
       );
-      print("BOSKUH");
-      print(transaction.amount);
 
       await DatabaseHelper.instance.insertTransaction(transaction);
-      // Navigator.pop(context);
+      Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add Transaction')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.addTransaction)),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Form(
@@ -240,12 +242,12 @@ $receiptText
                       segments: [
                         ButtonSegment<bool>(
                           value: true,
-                          label: Text('Expense'),
+                          label: Text(AppLocalizations.of(context)!.expense),
                           icon: Icon(Icons.arrow_downward),
                         ),
                         ButtonSegment<bool>(
                           value: false,
-                          label: Text('Income'),
+                          label: Text(AppLocalizations.of(context)!.income),
                           icon: Icon(Icons.arrow_upward),
                         ),
                       ],
@@ -263,13 +265,13 @@ $receiptText
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
-                  labelText: 'Title',
+                  labelText: AppLocalizations.of(context)!.title,
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.title),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a title';
+                    return AppLocalizations.of(context)!.pleaseEnterTitle;
                   }
                   return null;
                 },
@@ -278,7 +280,7 @@ $receiptText
               TextFormField(
                 controller: _amountController,
                 decoration: InputDecoration(
-                  labelText: 'Amount',
+                  labelText: AppLocalizations.of(context)!.amount,
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.attach_money),
                 ),
@@ -288,13 +290,15 @@ $receiptText
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter an amount';
+                    return AppLocalizations.of(context)!.pleaseEnterAmount;
                   }
                   if (double.tryParse(value) == null) {
-                    return 'Please enter a valid number';
+                    return AppLocalizations.of(context)!.pleaseEnterValidNumber;
                   }
                   if (double.parse(value) <= 0) {
-                    return 'Amount must be greater than zero';
+                    return AppLocalizations.of(
+                      context,
+                    )!.amountMustBeGreaterThanZero;
                   }
                   return null;
                 },
@@ -304,7 +308,7 @@ $receiptText
                 onTap: () => _selectDate(context),
                 child: InputDecorator(
                   decoration: InputDecoration(
-                    labelText: 'Date',
+                    labelText: AppLocalizations.of(context)!.date,
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.calendar_today),
                   ),
@@ -315,7 +319,7 @@ $receiptText
               ),
               SizedBox(height: 24),
               Text(
-                'Receipt Image (Optional)',
+                AppLocalizations.of(context)!.receiptImageOptional,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
@@ -325,7 +329,7 @@ $receiptText
                     children: [
                       CircularProgressIndicator(),
                       SizedBox(height: 8),
-                      Text('Processing receipt...'),
+                      Text(AppLocalizations.of(context)!.processingReceipt),
                     ],
                   ),
                 )
@@ -335,7 +339,7 @@ $receiptText
                     children: [
                       CircularProgressIndicator(),
                       SizedBox(height: 8),
-                      Text('Detecting total amount...'),
+                      Text(AppLocalizations.of(context)!.detectingTotalAmount),
                     ],
                   ),
                 )
@@ -355,7 +359,7 @@ $receiptText
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          'Detected amount: ${NumberFormat.currency(symbol: 'Rp. ', decimalDigits: 2).format(_extractedAmount)}',
+                        AppLocalizations.of(context)!.detectedAmount(NumberFormat.currency(symbol: 'Rp. ', decimalDigits: 2).format(_extractedAmount)),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.green,
@@ -365,7 +369,9 @@ $receiptText
                     SizedBox(height: 8),
                     OutlinedButton.icon(
                       icon: Icon(Icons.refresh),
-                      label: Text('Choose Another Receipt'),
+                      label: Text(
+                        AppLocalizations.of(context)!.chooseAnotherReceipt,
+                      ),
                       onPressed: _pickReceiptImage,
                     ),
                   ],
@@ -374,7 +380,7 @@ $receiptText
                 Center(
                   child: OutlinedButton.icon(
                     icon: Icon(Icons.add_a_photo),
-                    label: Text('Add Receipt Image'),
+                    label: Text(AppLocalizations.of(context)!.addReceiptImage),
                     onPressed: _pickReceiptImage,
                   ),
                 ),
@@ -388,7 +394,7 @@ $receiptText
                     backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
                   ),
-                  child: Text('Save Transaction'),
+                  child: Text(AppLocalizations.of(context)!.saveTransaction),
                 ),
               ),
             ],

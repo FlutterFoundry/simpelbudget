@@ -1,0 +1,67 @@
+{
+  "@@locale": "id",
+  "appTitle": "Pelacak Anggaran",
+  "dashboard": "Dasbor",
+  "transactions": "Transaksi",
+  "settings": "Pengaturan",
+  "addTransaction": "Tambah Transaksi",
+  "summary": "Ringkasan",
+  "income": "Pendapatan",
+  "expense": "Pengeluaran",
+  "balance": "Saldo",
+  "recentTransactions": "Transaksi Terbaru",
+  "currentPeriod": "Periode Saat Ini",
+  "cutoffDay": "Hari Pembatas: {day}",
+  "@cutoffDay": {
+    "description": "The day of the month that the budget period ends. This is used in the settings screen to allow the user to change the cutoff day.",
+    "placeholders": {
+      "day": {
+        "type": "int",
+        "example": "15"
+      }
+    }
+  },
+  "previousPeriod": "Periode Sebelumnya",
+  "nextPeriod": "Periode Selanjutnya",
+  "noTransactions": "Belum ada transaksi. Ketuk + untuk menambahkan!",
+  "deleteTransaction": "Hapus Transaksi",
+  "confirmDeleteTransaction": "Apakah Anda yakin ingin menghapus transaksi ini?",
+  "currency": "Mata Uang",
+  "currentCurrency": "Mata uang saat ini: {currency}",
+  "@currentCurrency": {
+    "description": "Mata uang saat ini yang dipilih oleh pengguna.",
+    "placeholders": {
+      "currency": {
+        "type": "String",
+        "example": "USD"
+      }
+    }
+  },
+  "about": "Tentang",
+  "clearAllData": "Hapus Semua Data",
+  "confirmClearAllData": "Apakah Anda yakin ingin menghapus semua transaksi? Tindakan ini tidak dapat dibatalkan.",
+  "allDataCleared": "Semua data telah dihapus",
+  "setCutoffDay": "Atur Hari Pembatas",
+  "cancel": "Batal",
+  "selectCurrency": "Pilih Mata Uang",
+  "all": "Semua",
+  "couldNotExtractTotal": "Tidak dapat mengekstrak jumlah total dari struk",
+  "errorExtractingDetails": "Kesalahan mengekstrak detail",
+  "errorReadingText": "Kesalahan membaca teks",
+  "title": "Judul",
+  "pleaseEnterTitle": "Silakan masukkan judul",
+  "amount": "Jumlah",
+  "pleaseEnterAmount": "Silakan masukkan jumlah",
+  "pleaseEnterValidNumber": "Silakan masukkan angka yang valid",
+  "amountMustBeGreaterThanZero": "Jumlah harus lebih besar dari nol",
+  "date": "Tanggal",
+  "receiptImageOptional": "Gambar Struk (Opsional)",
+  "processingReceipt": "Memproses struk...",
+  "detectingTotalAmount": "Mendeteksi jumlah total...",
+  "chooseAnotherReceipt": "Pilih Struk Lain",
+  "addReceiptImage": "Tambahkan Gambar Struk",
+  "saveTransaction": "Simpan Transaksi",
+  "detectedAmount": "Jumlah terdeteksi: {amount}",
+  "transactionDetails": "Detail Transaksi",
+  "receipt": "Struk"
+}

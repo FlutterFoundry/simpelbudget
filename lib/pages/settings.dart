@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:simpelbudget/services/database_helpeer.dart';
+import 'package:simpelbudget/services/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -14,7 +15,15 @@ class _SettingsPageState extends State<SettingsPage> {
   int _cutoffDay = 1;
   String _currency = 'USD';
   final List<String> _currencies = [
-    'USD', 'IDR', 'EUR', 'GBP', 'JPY', 'CNY', 'AUD', 'CAD', 'INR',
+    'USD',
+    'IDR',
+    'EUR',
+    'GBP',
+    'JPY',
+    'CNY',
+    'AUD',
+    'CAD',
+    'INR',
   ];
   bool _isLoading = true;
 
@@ -38,11 +47,6 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _cutoffDay = day;
     });
-    
-    // Show confirmation
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   SnackBar(content: Text('Cutoff day set to $day')),
-    // );
   }
 
   @override
@@ -50,26 +54,27 @@ class _SettingsPageState extends State<SettingsPage> {
     if (_isLoading) {
       return Center(child: CircularProgressIndicator());
     }
-    
+
     return ListView(
       children: [
         ListTile(
           leading: Icon(Icons.calendar_today),
-          title: Text('Set Cutoff Day'),
-          subtitle: Text('Current cutoff day: $_cutoffDay'),
+          title: Text(AppLocalizations.of(context)!.setCutoffDay),
+          subtitle: Text(AppLocalizations.of(context)!.cutoffDay(_cutoffDay)),
           onTap: () => _showCutoffDayPicker(context),
         ),
         Divider(),
         ListTile(
-          leading: Icon(Icons.attach_money),
-          title: Text('Currency'),
-          subtitle: Text('Current currency: $_currency'),
+          title: Text(AppLocalizations.of(context)!.currency),
+          subtitle: Text(
+            AppLocalizations.of(context)!.currentCurrency(_currency),
+          ),
           onTap: () => _showCurrencyPicker(context),
         ),
         Divider(),
         ListTile(
           leading: Icon(Icons.info),
-          title: Text('About'),
+          title: Text(AppLocalizations.of(context)!.about),
           onTap: () {
             showAboutDialog(
               context: context,
@@ -81,38 +86,46 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         ListTile(
           leading: Icon(Icons.delete_forever),
-          title: Text('Clear All Data'),
-          subtitle: Text('This action cannot be undone'),
+          title: Text(AppLocalizations.of(context)!.clearAllData),
+          subtitle: Text(AppLocalizations.of(context)!.confirmClearAllData),
           onTap: () {
             showDialog(
               context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Clear All Data'),
-                content: Text(
-                    'Are you sure you want to delete all transactions? This action cannot be undone.'),
-                actions: [
-                  TextButton(
-                    child: Text('Cancel'),
-                    onPressed: () => Navigator.pop(context),
+              builder:
+                  (context) => AlertDialog(
+                    title: Text(AppLocalizations.of(context)!.clearAllData),
+                    content: Text(
+                      AppLocalizations.of(context)!.confirmClearAllData,
+                    ),
+                    actions: [
+                      TextButton(
+                        child: Text(AppLocalizations.of(context)!.cancel),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.red,
+                        ),
+                        onPressed: () async {
+                          String path = join(
+                            await getDatabasesPath(),
+                            DatabaseHelper.databaseName,
+                          );
+                          await deleteDatabase(path);
+                          await DatabaseHelper.instance.database;
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                AppLocalizations.of(context)!.allDataCleared,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text('Delete All'),
+                      ),
+                    ],
                   ),
-                  TextButton(
-                    style: TextButton.styleFrom(foregroundColor: Colors.red),
-                    onPressed: () async {
-                      // Delete database file
-                      String path = join(
-                          await getDatabasesPath(), DatabaseHelper.databaseName);
-                      await deleteDatabase(path);
-                      // Reinitialize database
-                      await DatabaseHelper.instance.database;
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('All data cleared')),
-                      );
-                    },
-                    child: Text('Delete All'),
-                  ),
-                ],
-              ),
             );
           },
         ),
@@ -125,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Set Cutoff Day'),
+          title: Text(AppLocalizations.of(context)!.setCutoffDay),
           content: SizedBox(
             height: 300,
             width: 300,
@@ -136,9 +149,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 return ListTile(
                   title: Text('$day'),
                   selected: day == _cutoffDay,
-                  leading: day == _cutoffDay 
-                      ? Icon(Icons.check_circle, color: Colors.green)
-                      : Icon(Icons.calendar_today),
+                  leading:
+                      day == _cutoffDay
+                          ? Icon(Icons.check_circle, color: Colors.green)
+                          : Icon(Icons.calendar_today),
                   onTap: () {
                     _saveCutoffDay(day);
                     Navigator.pop(context);
@@ -149,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           actions: [
             TextButton(
-              child: Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -157,19 +171,20 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     );
   }
-  
+
   Future<void> _showCurrencyPicker(BuildContext context) async {
     final selected = await showDialog<String>(
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: Text('Select Currency'),
-          children: _currencies.map((c) {
-            return SimpleDialogOption(
-              child: Text(c),
-              onPressed: () => Navigator.pop(context, c),
-            );
-          }).toList(),
+          title: Text(AppLocalizations.of(context)!.selectCurrency),
+          children:
+              _currencies.map((c) {
+                return SimpleDialogOption(
+                  child: Text(c),
+                  onPressed: () => Navigator.pop(context, c),
+                );
+              }).toList(),
         );
       },
     );

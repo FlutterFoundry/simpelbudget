@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simpelbudget/models/transaction.dart';
 import 'package:simpelbudget/pages/transaction_list.dart';
-import 'package:simpelbudget/services/database_helpeer.dart';
+import 'package:simpelbudget/services/database_helper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -60,7 +61,6 @@ class _DashboardPageState extends State<DashboardPage> {
       final month = prevMonth < 1 ? 12 : prevMonth;
 
       _currentPeriodStart = DateTime(year, month, _cutoffDay);
-      // End on this month's cutoff day - 1
       _currentPeriodEnd = DateTime(
         _selectedYear,
         _selectedMonth,
@@ -143,19 +143,18 @@ class _DashboardPageState extends State<DashboardPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Period Filter Section
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.arrow_back_ios),
                                   onPressed: _previousPeriod,
-                                  tooltip: 'Previous Period',
+                                  tooltip: AppLocalizations.of(context)!.previousPeriod,
                                 ),
                                 Column(
                                   children: [
                                     Text(
-                                      'Current Period',
+                                      AppLocalizations.of(context)!.currentPeriod,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -169,7 +168,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                       ),
                                     ),
                                     Text(
-                                      'Cutoff: Day $_cutoffDay',
+                                      AppLocalizations.of(context)!.cutoffDay(_cutoffDay),
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -180,7 +179,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 IconButton(
                                   icon: Icon(Icons.arrow_forward_ios),
                                   onPressed: _nextPeriod,
-                                  tooltip: 'Next Period',
+                                  tooltip: AppLocalizations.of(context)!.nextPeriod,
                                   color:
                                       _selectedYear >= DateTime.now().year &&
                                               _selectedMonth >=
@@ -191,9 +190,8 @@ class _DashboardPageState extends State<DashboardPage> {
                               ],
                             ),
                             SizedBox(height: 16),
-                            // Summary Section
                             Text(
-                              'Summary',
+                              AppLocalizations.of(context)!.summary,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -204,7 +202,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               children: [
                                 Expanded(
                                   child: _buildSummaryItem(
-                                    'Income',
+                                    AppLocalizations.of(context)!.income,
                                     _totalIncome,
                                     Colors.green,
                                     Icons.arrow_upward,
@@ -213,7 +211,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 SizedBox(width: 16),
                                 Expanded(
                                   child: _buildSummaryItem(
-                                    'Expense',
+                                    AppLocalizations.of(context)!.expense,
                                     _totalExpense,
                                     Colors.red,
                                     Icons.arrow_downward,
@@ -228,7 +226,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Balance',
+                                  AppLocalizations.of(context)!.balance,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -255,7 +253,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     SizedBox(height: 24),
                     Text(
-                      'Recent Transactions',
+                      AppLocalizations.of(context)!.recentTransactions,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -267,7 +265,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 32),
                             child: Text(
-                              'No transactions yet. Tap + to add one!',
+                              AppLocalizations.of(context)!.noTransactions,
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),

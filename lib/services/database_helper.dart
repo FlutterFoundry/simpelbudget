@@ -7,7 +7,6 @@ class DatabaseHelper {
   static final databaseName = "budget.db";
   static final _databaseVersion = 1;
 
-  // Singleton pattern
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
@@ -40,7 +39,6 @@ class DatabaseHelper {
     ''');
   }
 
-  // Database operations
   Future<int> insertTransaction(mt.Transaction txn) async {
     Database db = await instance.database;
     return await db.insert('transactions', txn.toMap());
@@ -82,7 +80,6 @@ class DatabaseHelper {
   Future<void> saveSettings(Map<String, dynamic> settings) async {
     Database db = await instance.database;
 
-    // Create settings table if it doesn't exist
     await db.execute('''
       CREATE TABLE IF NOT EXISTS settings (
         key TEXT PRIMARY KEY,
@@ -90,7 +87,6 @@ class DatabaseHelper {
       )
     ''');
 
-    // Insert or update each setting
     for (var entry in settings.entries) {
       await db.insert('settings', {
         'key': entry.key,
@@ -112,7 +108,6 @@ class DatabaseHelper {
   Future<Map<String, dynamic>> getSettings() async {
     Database db = await instance.database;
 
-    // Create table if it doesn't exist
     await db.execute('''
       CREATE TABLE IF NOT EXISTS settings (
         key TEXT PRIMARY KEY,
@@ -136,14 +131,12 @@ class DatabaseHelper {
   ) async {
     Database db = await instance.database;
 
-    // Calculate date ranges based on cutoff date
     final DateTime startDate;
     final DateTime endDate;
 
     final currentDate = DateTime(year, month, cutoffDate.day);
 
     if (cutoffDate.day > DateTime(year, month + 1, 0).day) {
-      // If cutoff date is greater than days in month, use the last day of the month
       startDate = DateTime(year, month - 1, cutoffDate.day);
       endDate = DateTime(year, month, DateTime(year, month + 1, 0).day);
     } else {
@@ -173,7 +166,6 @@ class DatabaseHelper {
     final formattedStartDate = DateFormat('yyyy-MM-dd').format(startDate);
     final formattedEndDate = DateFormat('yyyy-MM-dd').format(endDate);
 
-    // Get income
     var result = await db.rawQuery(
       'SELECT SUM(amount) as total FROM transactions WHERE type = ? AND date >= ? AND date <= ?',
       ['income', formattedStartDate, formattedEndDate],
@@ -181,7 +173,6 @@ class DatabaseHelper {
     final income =
         result.first['total'] == null ? 0.0 : result.first['total'] as double;
 
-    // Get expenses
     result = await db.rawQuery(
       'SELECT SUM(amount) as total FROM transactions WHERE type = ? AND date >= ? AND date <= ?',
       ['expense', formattedStartDate, formattedEndDate],

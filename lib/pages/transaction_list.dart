@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simpelbudget/models/transaction.dart';
 import 'package:simpelbudget/pages/transaction_detail.dart';
-import 'package:simpelbudget/services/database_helpeer.dart';
+import 'package:simpelbudget/services/database_helper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({super.key});
@@ -15,7 +16,7 @@ class TransactionsPage extends StatefulWidget {
 
 class _TransactionsPageState extends State<TransactionsPage> {
   List<Transaction> _transactions = [];
-  String _filter = 'all'; // 'all', 'income', 'expense'
+  String _filter = 'all';
   bool _isLoading = true;
   int _cutoffDay = 1;
   bool _filterByPeriod = false;
@@ -45,29 +46,23 @@ class _TransactionsPageState extends State<TransactionsPage> {
     final currentDay = now.day;
 
     if (currentDay >= _cutoffDay) {
-      // We're after the cutoff day in the current month
       _currentPeriodStart = DateTime(_selectedYear, _selectedMonth, _cutoffDay);
 
-      // Calculate end date (cutoff day of next month - 1)
       final nextMonth = _selectedMonth + 1;
       final year = nextMonth > 12 ? _selectedYear + 1 : _selectedYear;
       final month = nextMonth > 12 ? 1 : nextMonth;
 
-      // Last day before the next cutoff
       _currentPeriodEnd = DateTime(
         year,
         month,
         _cutoffDay,
       ).subtract(Duration(days: 1));
     } else {
-      // We're before the cutoff day in the current month
-      // Start from previous month's cutoff day
       final prevMonth = _selectedMonth - 1;
       final year = prevMonth < 1 ? _selectedYear - 1 : _selectedYear;
       final month = prevMonth < 1 ? 12 : prevMonth;
 
       _currentPeriodStart = DateTime(year, month, _cutoffDay);
-      // End on this month's cutoff day - 1
       _currentPeriodEnd = DateTime(
         _selectedYear,
         _selectedMonth,
@@ -91,7 +86,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
   void _nextPeriod() {
     final now = DateTime.now();
-    // Don't allow going past current month
     if (_selectedYear >= now.year && _selectedMonth >= now.month) {
       return;
     }
@@ -116,7 +110,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
     List<Transaction> transactions;
 
     if (_filterByPeriod) {
-      // Get transactions for current period
       final db = await DatabaseHelper.instance.database;
       final formattedStartDate = DateFormat(
         'yyyy-MM-dd',
@@ -143,7 +136,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
         transactions = results.map((t) => Transaction.fromMap(t)).toList();
       }
     } else {
-      // Get all transactions filtered only by type
       if (_filter == 'all') {
         transactions = await DatabaseHelper.instance.getTransactions();
       } else {
@@ -167,21 +159,19 @@ class _TransactionsPageState extends State<TransactionsPage> {
           padding: EdgeInsets.all(16),
           child: Column(
             children: [
-              // Type filter
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildFilterChip('All', 'all'),
+                  _buildFilterChip(AppLocalizations.of(context)!.all, 'all'),
                   SizedBox(width: 8),
-                  _buildFilterChip('Income', 'income'),
+                  _buildFilterChip(AppLocalizations.of(context)!.income, 'income'),
                   SizedBox(width: 8),
-                  _buildFilterChip('Expense', 'expense'),
+                  _buildFilterChip(AppLocalizations.of(context)!.expense, 'expense'),
                 ],
               ),
               SizedBox(height: 12),
-              // Period filter toggle
               SwitchListTile(
-                title: Text('Filter by Cutoff Period'),
+                title: Text(AppLocalizations.of(context)!.currentPeriod),
                 value: _filterByPeriod,
                 onChanged: (value) {
                   setState(() {
@@ -193,7 +183,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
                 contentPadding: EdgeInsets.symmetric(horizontal: 8),
               ),
 
-              // Period selector (only show if filtering by period)
               if (_filterByPeriod)
                 Card(
                   elevation: 1,
@@ -205,7 +194,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                         IconButton(
                           icon: Icon(Icons.arrow_back_ios),
                           onPressed: _previousPeriod,
-                          tooltip: 'Previous Period',
+                          tooltip: AppLocalizations.of(context)!.previousPeriod,
                         ),
                         Column(
                           children: [
@@ -215,7 +204,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              'Cutoff: Day $_cutoffDay',
+                              AppLocalizations.of(
+                                context,
+                              )!.cutoffDay(_cutoffDay),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey[600],
@@ -226,8 +217,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                         IconButton(
                           icon: Icon(Icons.arrow_forward_ios),
                           onPressed: _nextPeriod,
-                          tooltip: 'Next Period',
-                          // Disable if we're at current month
+                          tooltip: AppLocalizations.of(context)!.nextPeriod,
                           color:
                               _selectedYear >= DateTime.now().year &&
                                       _selectedMonth >= DateTime.now().month
@@ -255,7 +245,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                           _transactions.isEmpty
                               ? Center(
                                 child: Text(
-                                  'No transactions found',
+                                  AppLocalizations.of(context)!.noTransactions,
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               )
@@ -368,9 +358,13 @@ class TransactionListItem extends StatelessWidget {
                   context: context,
                   builder:
                       (context) => AlertDialog(
-                        title: Text('Delete Transaction'),
+                        title: Text(
+                          AppLocalizations.of(context)!.deleteTransaction,
+                        ),
                         content: Text(
-                          'Are you sure you want to delete this transaction?',
+                          AppLocalizations.of(
+                            context,
+                          )!.confirmDeleteTransaction,
                         ),
                         actions: [
                           TextButton(

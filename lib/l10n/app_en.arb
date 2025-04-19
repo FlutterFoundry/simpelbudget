@@ -1,0 +1,67 @@
+{
+  "@@locale": "en",
+  "appTitle": "Budget Tracker",
+  "dashboard": "Dashboard",
+  "transactions": "Transactions",
+  "settings": "Settings",
+  "addTransaction": "Add Transaction",
+  "summary": "Summary",
+  "income": "Income",
+  "expense": "Expense",
+  "balance": "Balance",
+  "recentTransactions": "Recent Transactions",
+  "currentPeriod": "Current Period",
+  "cutoffDay": "Cutoff Day: {day}",
+  "@cutoffDay": {
+    "description": "The day of the month that the budget period ends. This is used in the settings screen to allow the user to change the cutoff day.",
+    "placeholders": {
+      "day": {
+        "type": "int",
+        "example": "15"
+      }
+    }
+  },
+  "previousPeriod": "Previous Period",
+  "nextPeriod": "Next Period",
+  "noTransactions": "No transactions yet. Tap + to add one!",
+  "deleteTransaction": "Delete Transaction",
+  "confirmDeleteTransaction": "Are you sure you want to delete this transaction?",
+  "currency": "Currency",
+  "currentCurrency": "Current currency: {currency}",
+  "@currentCurrency": {
+    "description": "The current currency selected by the user.",
+    "placeholders": {
+      "currency": {
+        "type": "String",
+        "example": "USD"
+      }
+    }
+  },
+  "about": "About",
+  "clearAllData": "Clear All Data",
+  "confirmClearAllData": "Are you sure you want to delete all transactions? This action cannot be undone.",
+  "allDataCleared": "All data cleared",
+  "setCutoffDay": "Set Cutoff Day",
+  "cancel": "Cancel",
+  "selectCurrency": "Select Currency",
+  "all": "All",
+  "couldNotExtractTotal": "Could not extract total amount from receipt",
+  "errorExtractingDetails": "Error extracting details",
+  "errorReadingText": "Error reading text",
+  "title": "Title",
+  "pleaseEnterTitle": "Please enter a title",
+  "amount": "Amount",
+  "pleaseEnterAmount": "Please enter an amount",
+  "pleaseEnterValidNumber": "Please enter a valid number",
+  "amountMustBeGreaterThanZero": "Amount must be greater than zero",
+  "date": "Date",
+  "receiptImageOptional": "Receipt Image (Optional)",
+  "processingReceipt": "Processing receipt...",
+  "detectingTotalAmount": "Detecting total amount...",
+  "chooseAnotherReceipt": "Choose Another Receipt",
+  "addReceiptImage": "Add Receipt Image",
+  "saveTransaction": "Save Transaction",
+  "detectedAmount": "Detected amount: {amount}",
+  "transactionDetails": "Transaction Details",
+  "receipt": "Receipt"
+}
