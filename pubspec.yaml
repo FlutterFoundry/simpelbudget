@@ -21,6 +21,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   flutter_localizations:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -33,3 +34,10 @@ flutter:
   assets:
     - .env
   generate: true
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: assets/icon/app_icon.png
+  adaptive_icon_background: "#ECE1FF"
+  adaptive_icon_foreground: "assets/icon/app_icon.png"
