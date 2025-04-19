@@ -1,5 +1,15 @@
 # Simpelbudget
-![App Icon](assets/icon/app_icon.png)
+<div align="center">
+  <img src="assets/icon/app_icon.png" alt="App Icon" width="100" />
+</div>
+
+<p align="center">
+  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.7.2-blue?logo=flutter" alt="Flutter Version"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/Platform-Android%20|%20iOS%20|%20Web%20|%20Desktop-lightgrey" alt="Platforms">
+  <img src="https://img.shields.io/badge/Localization-EN%20%7C%20ID-orange" alt="Localization">
+</p>
+
 Simpelbudget is a budget tracking Flutter application that helps you manage your expenses and incomes efficiently. It supports manual entry as well as receipt scanning with OCR and AI-powered detail extraction.
 
 ## Features
