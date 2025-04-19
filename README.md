@@ -1,5 +1,5 @@
 # Simpelbudget
-
+![App Icon](assets/icon/app_icon.png)
 Simpelbudget is a budget tracking Flutter application that helps you manage your expenses and incomes efficiently. It supports manual entry as well as receipt scanning with OCR and AI-powered detail extraction.
 
 ## Features
