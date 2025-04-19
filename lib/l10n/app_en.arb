@@ -63,5 +63,8 @@
   "saveTransaction": "Save Transaction",
   "detectedAmount": "Detected amount: {amount}",
   "transactionDetails": "Transaction Details",
-  "receipt": "Receipt"
+  "receipt": "Receipt",
+  "chooseImageSource": "Choose Image Source",
+  "camera": "Camera",
+  "gallery": "Gallery"
 }

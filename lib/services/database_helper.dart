@@ -46,7 +46,7 @@ class DatabaseHelper {
 
   Future<List<mt.Transaction>> getTransactions() async {
     Database db = await instance.database;
-    var transactions = await db.query('transactions', orderBy: 'date DESC');
+    var transactions = await db.query('transactions', orderBy: 'date DESC, id DESC');
     return transactions.map((t) => mt.Transaction.fromMap(t)).toList();
   }
 
@@ -56,7 +56,7 @@ class DatabaseHelper {
       'transactions',
       where: 'type = ?',
       whereArgs: [type],
-      orderBy: 'date DESC',
+      orderBy: 'date DESC, id DESC',
     );
     return transactions.map((t) => mt.Transaction.fromMap(t)).toList();
   }

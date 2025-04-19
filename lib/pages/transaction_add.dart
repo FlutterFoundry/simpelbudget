@@ -52,13 +52,37 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     }
   }
 
+  Future<ImageSource?> _showImageSourceDialog() async {
+    return showDialog<ImageSource>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.chooseImageSource),
+          actions: <Widget>[
+            TextButton(
+              child: Text(AppLocalizations.of(context)!.camera),
+              onPressed: () => Navigator.of(context).pop(ImageSource.camera),
+            ),
+             TextButton(
+              child: Text(AppLocalizations.of(context)!.gallery),
+              onPressed: () => Navigator.of(context).pop(ImageSource.gallery),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _pickReceiptImage() async {
+    final ImageSource? source = await _showImageSourceDialog();
+    if (source == null) return;
+
     setState(() {
       _isProcessingReceipt = true;
     });
 
     final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    final pickedImage = await picker.pickImage(source: source);
 
     if (pickedImage == null) {
       setState(() {
@@ -359,7 +383,12 @@ $receiptText
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                        AppLocalizations.of(context)!.detectedAmount(NumberFormat.currency(symbol: 'Rp. ', decimalDigits: 2).format(_extractedAmount)),
+                          AppLocalizations.of(context)!.detectedAmount(
+                            NumberFormat.currency(
+                              symbol: 'Rp. ',
+                              decimalDigits: 2,
+                            ).format(_extractedAmount),
+                          ),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.green,

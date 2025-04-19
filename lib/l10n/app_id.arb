@@ -63,5 +63,8 @@
   "saveTransaction": "Simpan Transaksi",
   "detectedAmount": "Jumlah terdeteksi: {amount}",
   "transactionDetails": "Detail Transaksi",
-  "receipt": "Struk"
+  "receipt": "Struk",
+  "chooseImageSource": "Pilih Sumber Gambar",
+  "camera": "Kamera",
+  "gallery": "Galeri"
 }
