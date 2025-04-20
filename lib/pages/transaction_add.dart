@@ -1,16 +1,14 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:simpelbudget/models/transaction.dart';
 import 'package:simpelbudget/services/database_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:simpelbudget/services/receipt_details_service.dart';
 
 class AddTransactionPage extends StatefulWidget {
   const AddTransactionPage({super.key});
@@ -20,6 +18,7 @@ class AddTransactionPage extends StatefulWidget {
 }
 
 class _AddTransactionPageState extends State<AddTransactionPage> {
+  final ReceiptDetailsService _receiptDetailsService = ReceiptDetailsService();
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
@@ -116,7 +115,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       });
 
       try {
-        final receiptDetails = await _getReceiptDetails(processedText);
+        final receiptDetails = await _receiptDetailsService.getReceiptDetails(processedText);
         if (receiptDetails.containsKey('total')) {
           setState(() {
             _extractedAmount = receiptDetails['total'];
@@ -173,64 +172,6 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     );
 
     return cleanText;
-  }
-
-  Future<Map<String, dynamic>> _getReceiptDetails(String receiptText) async {
-    final apiKey = dotenv.env['OPENAI_API_KEY'] ?? '';
-    if (apiKey.isEmpty) {
-      throw Exception('OPENAI_API_KEY not found in .env file');
-    }
-    final url = Uri.parse('https://api.openai.com/v1/chat/completions');
-    final response = await http.post(
-      url,
-      headers: {
-        'Authorization': 'Bearer $apiKey',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'model': 'gpt-3.5-turbo',
-        'messages': [
-          {
-            'role': 'system',
-            'content':
-                'You are a helpful assistant that extracts structured details from receipts including items, quantity, price, and total.',
-          },
-          {
-            'role': 'user',
-            'content': '''
-Extract structured details from this receipt text. Return the result in JSON format like this:
-{
-  "item": [
-    {
-      "name": "ES TEH GEPREK",
-      "quantity": 1,
-      "price": 25000.00
-    }
-  ],
-  "subtotal": 25000.00,
-  "total": 25000.00,
-  "tax": 0.00
-}
-Receipt Text:
-$receiptText
-          ''',
-          },
-        ],
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final content = data['choices'][0]['message']['content'];
-      try {
-        final jsonData = jsonDecode(content);
-        return jsonData;
-      } catch (e) {
-        throw Exception('Failed to parse response as JSON: $content');
-      }
-    } else {
-      throw Exception('Failed to get response: ${response.body}');
-    }
   }
 
   void _saveTransaction() async {

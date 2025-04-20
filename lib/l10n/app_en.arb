@@ -66,5 +66,8 @@
   "receipt": "Receipt",
   "chooseImageSource": "Choose Image Source",
   "camera": "Camera",
-  "gallery": "Gallery"
+  "gallery": "Gallery",
+  "aiProviderLabel": "AI Provider",
+  "openAI": "OpenAI",
+  "mistral": "Mistral"
 }

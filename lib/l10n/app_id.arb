@@ -66,5 +66,8 @@
   "receipt": "Struk",
   "chooseImageSource": "Pilih Sumber Gambar",
   "camera": "Kamera",
-  "gallery": "Galeri"
+  "gallery": "Galeri",
+  "aiProviderLabel": "Penyedia AI",
+  "openAI": "OpenAI",
+  "mistral": "Mistral"
 }
